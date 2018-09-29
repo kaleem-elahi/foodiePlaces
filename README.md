@@ -1,1 +1,1 @@
-# foodiesPlaces
+# foodiePlaces
