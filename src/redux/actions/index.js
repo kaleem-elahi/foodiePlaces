@@ -33,50 +33,17 @@ export function loginThunk(callback) {
   };
 }
 
-function getRestaurants(restaurants) {
+export function getRestaurants(restaurants) {
   return {
     type: GET_RESTAURANTS,
     payload: restaurants,
   };
 }
 
-export function getRestaurantsThunk(user) {
-  return (dispatch) => {
-    const restaurants = [];
-    database
-      .ref(`${user.uid}/restaurants`)
-      .once('value', (snap) => {
-        snap.forEach((data) => {
-          const restaurant = data.val();
-          restaurant.key = data.key;
-          restaurants.push(restaurant);
-        });
-      })
-      .then(() => {
-        console.log(restaurants);
-        dispatch(getRestaurants(restaurants));
-      });
-  };
-}
-
-function addRestaurant(restaurant) {
+export function addRestaurant(restaurant) {
   return {
     type: ADD_RESTAURANT,
     payload: restaurant,
-  };
-}
-
-export function addRestaurantThunk(user, restaurant) {
-  return (dispatch) => {
-    database
-      .ref(`${user.uid}/restaurants`)
-      .push(restaurant)
-      .once('value')
-      .then((snap) => {
-        const restaurantV = snap.val();
-        restaurantV.key = snap.key;
-        dispatch(addRestaurant(restaurantV));
-      });
   };
 }
 

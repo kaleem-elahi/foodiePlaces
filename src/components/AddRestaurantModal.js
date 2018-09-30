@@ -15,28 +15,27 @@ import {
 import { reduxForm, Form, Field } from 'redux-form';
 import Rating from 'react-rating';
 import yellowStar from '../assets/img/star-yellow.png';
-import RedStar from '../assets/img/star-red.png';
+// import RedStar from '../assets/img/star-red.png';
 import greyStar from '../assets/img/star-grey.png';
 import RenderInput from './InputField';
 
 const required = value => (value || typeof value === 'number' ? undefined : 'Required');
 
 const RatingCompo = ({
-  input, label, type, meta: { touched, error, warning },
+  input, label, type,
+  meta: { touched, error, warning },
 }) => (
   <div>
     <div>
       <Rating
-        id="rating"
-        {...input}
-        placeholder={label}
-        type={type}
-        placeholderRating={3.5}
+        input
+        className="rating"
+        placeholderRating={0}
         emptySymbol={<img alt="emptyIcon" src={greyStar} className="icon" />}
-        placeholderSymbol={<img alt="RedStarIcon" src={RedStar} className="icon" />}
+        // placeholderSymbol={<img alt="RedStarIcon" src={RedStar} className="icon" />}
         fullSymbol={<img alt="YellowStarIcon" src={yellowStar} className="icon" />}
       />
-      {touched && ((error && <span>{error}</span>) || (warning && <span>{warning}</span>))}
+      {touched && ((error && <span className="error">{error}</span>) || (warning && <span>{warning}</span>))}
     </div>
   </div>
 );
@@ -58,40 +57,21 @@ const autocompleteField = ({
         'address',
       ]}
     />
-    {touched && ((error && <span>{error}</span>) || (warning && <span>{warning}</span>))}
+    {touched && ((error && <span className="error">{error}</span>) || (warning && <span>{warning}</span>))}
   </Fragment>
 );
 
-class AddRestaurantModal extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      modal: false,
-    };
-
-    this.toggle = this.toggle.bind(this);
-  }
-
-  toggle() {
-    this.setState({
-      modal: !this.state.modal,
-    });
-  }
-
-  propssubmitAddRestaurantForm(a, b, c) {
-    //eslint-disable-line
-    console.log(a, b, c, this);
-  }
+class AddRestaurantModal extends Component {//eslint-disable-line
 
   render() {
     const { className } = this.props;
     return (
       <Fragment>
-        <Button color="danger" onClick={this.toggle}>
+        <Button color="danger" onClick={this.props.toggle}>
           Add a new Foodie Place
         </Button>
-        <Modal isOpen={this.state.modal} toggle={this.toggle} className={className}>
-          <ModalHeader toggle={this.toggle}>Add Restaurant</ModalHeader>
+        <Modal isOpen={this.props.modal} toggle={this.props.toggle} className={className}>
+          <ModalHeader toggle={this.props.toggle}>Add Restaurant</ModalHeader>
           <ModalBody>
             <Form
               id="addRestaurantForm"
@@ -129,11 +109,6 @@ class AddRestaurantModal extends Component {
                     name="rating"
                     type="text"
                     component={RatingCompo}
-                    label="start typing.."
-                    validate={[required]}
-                    style={{
-                      width: '70%',
-                    }}
                   />
                 </Col>
               </FormGroup>
@@ -144,7 +119,7 @@ class AddRestaurantModal extends Component {
               Submit
             </Button>
             {' '}
-            <Button color="secondary" onClick={this.toggle}>
+            <Button color="secondary" onClick={this.props.toggle}>
               Cancel
             </Button>
           </ModalFooter>

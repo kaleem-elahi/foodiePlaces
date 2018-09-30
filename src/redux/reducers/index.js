@@ -17,12 +17,18 @@ export default function fetchRestaurants(state = [], action) {
         restaurants: action.payload,
       };
     case ADD_RESTAURANT:
-      return [...state, action.payload];
+      return {
+        ...state,
+        restaurants: [...state.restaurants, action.payload],
+      };
     case EDIT_RESTAURANT: {
       const index = state.restaurants.findIndex(restaurant => restaurant.id === action.payload.id);
       state[index] = action.payload;
       const newRestaurants = state.restaurants.map(restaurant => restaurant);
-      return newRestaurants;
+      return {
+        ...state,
+        restaurants: newRestaurants,
+      };
     }
     case REMOVE_RESTAURANT:
 

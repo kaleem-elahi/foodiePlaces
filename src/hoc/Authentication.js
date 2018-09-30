@@ -34,7 +34,7 @@ export default function authentication(WrappedComponent) {
         }
         return <Login />;
       }
-      return 'Just a min please!';
+      return <center>Wait a sec, fetching data from firebase ...</center>;
     }
   }
 

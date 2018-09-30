@@ -10,7 +10,7 @@ class RenderInput extends PureComponent {
       placeholder,
       type,
       id,
-      meta: { touched, error },
+      meta: { touched, error, warning },
     } = this.props;
 
     const classes = classNames({
@@ -21,7 +21,8 @@ class RenderInput extends PureComponent {
     return (
       <FormGroup color={classes}>
         <Input {...input} id={id} type={type} placeholder={placeholder} />
-        {touched && error && <FormFeedback>{error}</FormFeedback>}
+        {touched && ((error && <span className="error">{error}</span>) || (warning && <span>{warning}</span>))}
+
       </FormGroup>
     );
   }
