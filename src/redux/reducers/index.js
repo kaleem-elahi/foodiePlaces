@@ -12,13 +12,16 @@ export default function fetchRestaurants(state = [], action) {
     case LOGIN:
       return action.payload;
     case GET_RESTAURANTS:
-      return action.payload;
+      return {
+        ...state,
+        restaurants: action.payload,
+      };
     case ADD_RESTAURANT:
       return [...state, action.payload];
     case EDIT_RESTAURANT: {
-      const index = state.findIndex(restaurant => restaurant.id === action.payload.id);
+      const index = state.restaurants.findIndex(restaurant => restaurant.id === action.payload.id);
       state[index] = action.payload;
-      const newRestaurants = state.map(restaurant => restaurant);
+      const newRestaurants = state.restaurants.map(restaurant => restaurant);
       return newRestaurants;
     }
     case REMOVE_RESTAURANT:

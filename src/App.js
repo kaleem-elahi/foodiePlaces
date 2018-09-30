@@ -1,43 +1,31 @@
-import React, { Component } from 'react';
-// import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { Button } from 'reactstrap';
-import { addRestaurantThunk } from './redux/actions/index';
-import AddRestaurantModal from './components/AddRestaurantModal';
-import logo from './logo.svg';
+import PropTypes from 'prop-types';
 import './App.css';
+import { getRestaurantsThunk } from './redux/actions/index';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Header from './components/Header';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-
-    this.submitAddRestaurantForm = this.submitAddRestaurantForm.bind(this);
-  }
-
-  submitAddRestaurantForm(values) {
-    console.log(values, this);
-    this.props.addRestaurantThunk(this.props.authUser, values);
+class App extends PureComponent {
+  // constructor(props) {
+  //   super(props);
+  // }
+  componentDidMount() {
+    this.props.getRestaurantsThunk(this.props.authUser);
   }
 
   render() {
     console.log(this.props.authUser);
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          <AddRestaurantModal submitAddRestaurantForm={this.submitAddRestaurantForm} />
-          <Button color="danger">Danger!</Button>
-          To get started, edit
-          {' '}
+        <Header authUser={this.props.authUser} />
+        <div className="App-intro">
+          {this.props.restaurants.map(d => (
+            <div>{d.restaurantName}</div>
+          ))}
           <code>src/App.js</code>
-          {' '}
 and save to reload.
-        </p>
+        </div>
       </div>
     );
   }
@@ -45,16 +33,23 @@ and save to reload.
 
 App.propTypes = {
   // boolean to control the state of the popover
-  addRestaurantThunk: PropTypes.func.isRequired,
   authUser: PropTypes.objectOf(PropTypes.any).isRequired,
+  restaurants: PropTypes.arrayOf(PropTypes.any),
+  getRestaurantsThunk: PropTypes.func.isRequired,
 };
 App.defaultProps = {
-  // className: '',
+  restaurants: [],
 };
 
-// function mapStateToProps() {}
+function mapStateToProps(state) {
+  console.log(state);
+  return ({
+    restaurants: state.data.restaurants,
+  });
+}
 const mapDispatchToProps = dispatch => ({
-  addRestaurantThunk: (user, contact) => dispatch(addRestaurantThunk(user, contact)),
+  getRestaurantsThunk: (user, contact) => dispatch(getRestaurantsThunk(user, contact)),
 });
 
-export default connect(null, mapDispatchToProps)(App);
+export default connect(mapStateToProps,
+  mapDispatchToProps)(App);

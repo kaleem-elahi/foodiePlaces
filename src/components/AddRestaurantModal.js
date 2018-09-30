@@ -47,7 +47,7 @@ const autocompleteField = ({
   <Fragment>
     <Autocomplete
       id="location"
-      style={{ width: '40%' }}
+      style={{ width: '100%' }}
       onPlaceSelected={(place) => {
         console.log(place);
       }}
@@ -55,10 +55,7 @@ const autocompleteField = ({
       placeholder={label}
       type={type}
       types={[
-      // "(regions)"
         'address',
-      // "(cities)",
-      //   "geocode"
       ]}
     />
     {touched && ((error && <span>{error}</span>) || (warning && <span>{warning}</span>))}
@@ -105,7 +102,7 @@ class AddRestaurantModal extends Component {
                   <Label htmlFor="restaurantName" sm={7}>
                     Restaurant Name
                   </Label>
-                  <Field id="restaurantName" name="restaurantName" component={RenderInput} validate={[required]} />
+                  <Field id="restaurantName" type="text" name="restaurantName" component={RenderInput} validate={[required]} />
                   {' '}
                 </Col>
               </FormGroup>
@@ -120,9 +117,6 @@ class AddRestaurantModal extends Component {
                     component={autocompleteField}
                     label="start typing.."
                     validate={[required]}
-                    style={{
-                      width: '70%',
-                    }}
                   />
                 </Col>
               </FormGroup>

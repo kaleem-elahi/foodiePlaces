@@ -13,7 +13,7 @@ export default function authentication(WrappedComponent) {
       };
     }
 
-    componentWillMount() {
+    componentDidMount() {
       auth.onAuthStateChanged((authUser) => {
         if (!authUser) {
           this.setState(() => ({ authUser: null, isLoading: true }));

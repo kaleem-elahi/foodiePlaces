@@ -53,6 +53,7 @@ export function getRestaurantsThunk(user) {
         });
       })
       .then(() => {
+        console.log(restaurants);
         dispatch(getRestaurants(restaurants));
       });
   };
