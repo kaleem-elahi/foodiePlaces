@@ -6,11 +6,11 @@ import {
 } from '../../config/Firebase-config';
 
 export const LOGIN = 'LOGIN';
-export const ADD_CONTACT = 'ADD_CONTACT';
-export const GET_CONTACTS = 'GET_CONTACTS';
+export const ADD_RESTAURANT = 'ADD_RESTAURANT';
+export const GET_RESTAURANTS = 'GET_RESTAURANTS';
 export const TOGGLE_FAV = 'TOGGLE_FAV';
-export const RM_CONTACT = 'RM_CONTACT';
-export const EDIT_CONTACT = 'EDIT_CONTACT';
+export const REMOVE_RESTAURANT = 'REMOVE_RESTAURANT';
+export const EDIT_RESTAURANT = 'EDIT_RESTAURANT';
 
 function login(authData) {
   return {
@@ -33,108 +33,108 @@ export function loginThunk(callback) {
   };
 }
 
-function getContacts(contacts) {
+function getRestaurants(restaurants) {
   return {
-    type: GET_CONTACTS,
-    payload: contacts,
+    type: GET_RESTAURANTS,
+    payload: restaurants,
   };
 }
 
-export function getContactsThunk(user) {
+export function getRestaurantsThunk(user) {
   return (dispatch) => {
-    const contacts = [];
+    const restaurants = [];
     database
-      .ref(`${user.uid}/contacts`)
+      .ref(`${user.uid}/restaurants`)
       .once('value', (snap) => {
         snap.forEach((data) => {
-          const contact = data.val();
-          contact.key = data.key;
-          contacts.push(contact);
+          const restaurant = data.val();
+          restaurant.key = data.key;
+          restaurants.push(restaurant);
         });
       })
       .then(() => {
-        dispatch(getContacts(contacts));
+        dispatch(getRestaurants(restaurants));
       });
   };
 }
 
-function addContact(contact) {
+function addRestaurant(restaurant) {
   return {
-    type: ADD_CONTACT,
-    payload: contact,
+    type: ADD_RESTAURANT,
+    payload: restaurant,
   };
 }
 
-export function addContactThunk(user, contact) {
+export function addRestaurantThunk(user, restaurant) {
   return (dispatch) => {
     database
-      .ref(`${user.uid}/contacts`)
-      .push(contact)
+      .ref(`${user.uid}/restaurants`)
+      .push(restaurant)
       .once('value')
       .then((snap) => {
-        const contactV = snap.val();
-        contactV.key = snap.key;
-        dispatch(addContact(contactV));
+        const restaurantV = snap.val();
+        restaurantV.key = snap.key;
+        dispatch(addRestaurant(restaurantV));
       });
   };
 }
 
-function editContact(contact) {
+function editRestaurant(restaurant) {
   return {
-    type: EDIT_CONTACT,
-    payload: contact,
+    type: EDIT_RESTAURANT,
+    payload: restaurant,
   };
 }
-export function editContactThunk(user, contact, image) {
+export function editRestaurantThunk(user, restaurant, image) {
   return (dispatch) => {
     if (image) {
       storage.refFromURL(image).delete();
     }
     database
-      .ref(`${user.uid}/contacts/${contact.key}`)
-      .set(contact)
+      .ref(`${user.uid}/restaurants/${restaurant.key}`)
+      .set(restaurant)
       .then(() => {
-        dispatch(editContact(contact));
+        dispatch(editRestaurant(restaurant));
       });
   };
 }
 
-function deleteContact(contact) {
+function deleteRestaurant(restaurant) {
   return {
-    type: RM_CONTACT,
-    payload: contact,
+    type: REMOVE_RESTAURANT,
+    payload: restaurant,
   };
 }
-export function deleteContactThunk(contact, user) {
+export function deleteRestaurantThunk(restaurant, user) {
   return (dispatch) => {
-    if (contact.image) {
-      storage.refFromURL(contact.image).delete();
+    if (restaurant.image) {
+      storage.refFromURL(restaurant.image).delete();
     }
     database
-      .ref(`${user.uid}/contacts/${contact.key}`)
+      .ref(`${user.uid}/restaurants/${restaurant.key}`)
       .remove()
       .then(() => {
-        dispatch(deleteContact(contact));
+        dispatch(deleteRestaurant(restaurant));
       });
   };
 }
 
-function toggleFavourite(contact) {
+function toggleFavourite(restaurant) {
   return {
     type: TOGGLE_FAV,
-    payload: contact,
+    payload: restaurant,
   };
 }
 
-export function toggleFavouriteThunk(contact, user) {
+export function toggleFavouriteThunk(restaurant, user) {
   return (dispatch) => {
-    const contactV = contact;
-    contactV.isFavourite = !contact.isFavourite;
+    const restaurantV = restaurant;
+    restaurantV.isFavourite = !restaurant.isFavourite;
     database
-      .ref(`${user.uid}/contacts/${contactV.key}`)
-      .set(contactV)
+      .ref(`${user.uid}/restaurants/${restaurantV.key}`)
+      .set(restaurantV)
       .then(() => {
-        dispatch(toggleFavourite(contactV));
+        dispatch(toggleFavourite(restaurantV));
       });
   };
 }

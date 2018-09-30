@@ -21,16 +21,25 @@ import RenderInput from './InputField';
 
 const required = value => (value || typeof value === 'number' ? undefined : 'Required');
 
-// const renderField = ({
-//   input, label, type, meta: { touched, error, warning },
-// }) => (
-//   <div>
-//     <div>
-//       <input {...input} placeholder={label} type={type} />
-//       {touched && ((error && <span>{error}</span>) || (warning && <span>{warning}</span>))}
-//     </div>
-//   </div>
-// );
+const RatingCompo = ({
+  input, label, type, meta: { touched, error, warning },
+}) => (
+  <div>
+    <div>
+      <Rating
+        id="rating"
+        {...input}
+        placeholder={label}
+        type={type}
+        placeholderRating={3.5}
+        emptySymbol={<img alt="emptyIcon" src={greyStar} className="icon" />}
+        placeholderSymbol={<img alt="RedStarIcon" src={RedStar} className="icon" />}
+        fullSymbol={<img alt="YellowStarIcon" src={yellowStar} className="icon" />}
+      />
+      {touched && ((error && <span>{error}</span>) || (warning && <span>{warning}</span>))}
+    </div>
+  </div>
+);
 
 const autocompleteField = ({
   input, label, type, meta: { touched, error, warning },
@@ -92,38 +101,45 @@ class AddRestaurantModal extends Component {
               onSubmit={this.props.handleSubmit(this.props.submitAddRestaurantForm)}
             >
               <FormGroup row>
-                <Col sm={10}>
-                  <Label for="restaurantName" sm={7}>
+                <Col sm={8}>
+                  <Label htmlFor="restaurantName" sm={7}>
                     Restaurant Name
                   </Label>
-                  <Field name="restaurantName" component={RenderInput} validate={[required]} />
+                  <Field id="restaurantName" name="restaurantName" component={RenderInput} validate={[required]} />
                   {' '}
                 </Col>
               </FormGroup>
               <FormGroup row>
-                <Label for="location" sm={2}>
+                <Col sm={8}>
+                  <Label htmlFor="location" sm={7}>
                   Location
-                </Label>
-                <Col sm={10}>
+                  </Label>
                   <Field
                     name="location"
                     type="text"
                     component={autocompleteField}
                     label="start typing.."
                     validate={[required]}
+                    style={{
+                      width: '70%',
+                    }}
                   />
                 </Col>
               </FormGroup>
               <FormGroup row>
-                <Label for="location" sm={2}>
-                  Rate it:
-                </Label>
                 <Col sm={10}>
-                  <Rating
-                    placeholderRating={3.5}
-                    emptySymbol={<img alt="emptyIcon" src={greyStar} className="icon" />}
-                    placeholderSymbol={<img alt="RedStarIcon" src={RedStar} className="icon" />}
-                    fullSymbol={<img alt="YellowStarIcon" src={yellowStar} className="icon" />}
+                  <Label htmlFor="rating" sm={7}>
+                  Rate it:
+                  </Label>
+                  <Field
+                    name="rating"
+                    type="text"
+                    component={RatingCompo}
+                    label="start typing.."
+                    validate={[required]}
+                    style={{
+                      width: '70%',
+                    }}
                   />
                 </Col>
               </FormGroup>

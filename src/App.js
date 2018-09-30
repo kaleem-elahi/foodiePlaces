@@ -1,22 +1,28 @@
 import React, { Component } from 'react';
 // import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Button } from 'reactstrap';
+import { addRestaurantThunk } from './redux/actions/index';
 import AddRestaurantModal from './components/AddRestaurantModal';
 import logo from './logo.svg';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends Component {
-  // constructor(props) {
-  //   super(props);
-  // }
+  constructor(props) {
+    super(props);
+
+    this.submitAddRestaurantForm = this.submitAddRestaurantForm.bind(this);
+  }
 
   submitAddRestaurantForm(values) {
     console.log(values, this);
+    this.props.addRestaurantThunk(this.props.authUser, values);
   }
 
   render() {
+    console.log(this.props.authUser);
     return (
       <div className="App">
         <header className="App-header">
@@ -39,13 +45,16 @@ and save to reload.
 
 App.propTypes = {
   // boolean to control the state of the popover
-  // handleSubmit: PropTypes.func.isRequired,
+  addRestaurantThunk: PropTypes.func.isRequired,
+  authUser: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 App.defaultProps = {
   // className: '',
 };
 
 // function mapStateToProps() {}
-// function mapDispatchToProps() {}
+const mapDispatchToProps = dispatch => ({
+  addRestaurantThunk: (user, contact) => dispatch(addRestaurantThunk(user, contact)),
+});
 
-export default (App);
+export default connect(null, mapDispatchToProps)(App);
