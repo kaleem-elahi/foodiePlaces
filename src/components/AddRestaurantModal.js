@@ -26,11 +26,15 @@ const RatingCompo = ({
   meta: { touched, error, warning },
 }) => (
   <div>
+    {console.log(input)}
     <div>
       <Rating
-        input
+        value={input.value}
+        name={input.name}
+        // name={input.name}
+        onClick={input.onClick}
+        // {...input}
         className="rating"
-        placeholderRating={0}
         emptySymbol={<img alt="emptyIcon" src={greyStar} className="icon" />}
         // placeholderSymbol={<img alt="RedStarIcon" src={RedStar} className="icon" />}
         fullSymbol={<img alt="YellowStarIcon" src={yellowStar} className="icon" />}
@@ -52,6 +56,9 @@ const autocompleteField = ({
       }}
       {...input}
       placeholder={label}
+      onKeyPress={(e) => {
+        if (e.key === 'Enter') e.preventDefault();
+      }}
       type={type}
       types={[
         'address',
@@ -133,6 +140,8 @@ AddRestaurantModal.propTypes = {
   // boolean to control the state of the popover
   className: PropTypes.string,
   handleSubmit: PropTypes.func,
+  modal: PropTypes.bool.isRequired,
+  toggle: PropTypes.func.isRequired,
   submitAddRestaurantForm: PropTypes.func,
 };
 AddRestaurantModal.defaultProps = {

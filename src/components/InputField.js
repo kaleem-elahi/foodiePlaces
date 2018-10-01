@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import { Input, FormGroup, FormFeedback } from 'reactstrap';
+import { Input, FormGroup } from 'reactstrap';
 
 class RenderInput extends PureComponent {
   render() {
@@ -32,8 +32,7 @@ RenderInput.propTypes = {
   input: PropTypes.object, // eslint-disable-line
   placeholder: PropTypes.string,
   type: PropTypes.string.isRequired,
-  meta: PropTypes.shape({
-    // eslint-disable-line
+  meta: PropTypes.shape({// eslint-disable-line
     touched: PropTypes.bool,
     error: PropTypes.any,
   }),

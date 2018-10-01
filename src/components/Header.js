@@ -15,7 +15,9 @@ import {
   DropdownItem,
 } from 'reactstrap';
 import { withRouter } from 'react-router';
+import { reset } from 'redux-form';
 import { addRestaurant } from '../redux/actions/index';
+
 import AddRestaurantModal from './AddRestaurantModal';
 import logo from '../assets/img/icon.png';
 import { auth, database } from '../config/Firebase-config';
@@ -78,6 +80,7 @@ class Header extends Component {
         this.setState({
           modal: false,
         });
+        this.props.dispatch(reset('addRestaurantForm'));
       });
   }
 
@@ -95,7 +98,12 @@ class Header extends Component {
         <Collapse isOpen={this.state.isOpen} navbar>
           <Nav className="ml-auto" navbar>
             <NavItem>
-              <AddRestaurantModal modal={this.state.modal} toggle={this.toggle} submitAddRestaurantForm={this.submitAddRestaurantForm} />
+              <AddRestaurantModal
+                dispatch={this.props.dispatch}
+                modal={this.state.modal}
+                toggle={this.toggle}
+                submitAddRestaurantForm={this.submitAddRestaurantForm}
+              />
             </NavItem>
             <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav caret>
@@ -122,7 +130,7 @@ class Header extends Component {
 Header.propTypes = {
   // boolean to control the state of the popover
   addRestaurant: PropTypes.func.isRequired,
-  // dispatch: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
   authUser: PropTypes.objectOf(PropTypes.any).isRequired,
   history: PropTypes.objectOf(PropTypes.any),
 };
