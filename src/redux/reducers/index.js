@@ -20,6 +20,7 @@ export default function fetchRestaurants(state = [], action) {
       return {
         ...state,
         restaurants: [...state.restaurants, action.payload],
+        loading: false,
       };
     case EDIT_RESTAURANT: {
       const index = state.restaurants.findIndex(restaurant => restaurant.id === action.payload.id);
@@ -34,8 +35,12 @@ export default function fetchRestaurants(state = [], action) {
 
       return state.filter(task => task.id !== action.payload.id);
     case TOGGLE_FAV: {
-      const newRestaurants = state.map(restaurant => restaurant);
-      return newRestaurants; }
+      const newRestaurants = state.restaurants.map(restaurant => restaurant);
+      return {
+        ...state,
+        restaurants: newRestaurants,
+      };
+    }
     default:
       return state;
   }

@@ -14,12 +14,22 @@ class Login extends Component {
 
   render() {
     return (
-      <div>
-        <h2>Login</h2>
+      <center>
+        <h4 style={{
+          padding: '21px 65px',
+          height: 'unset',
+          color: '#ffffff',
+          background: '#dc3545',
+        }}
+        >
+Foodie you ?
+
+        </h4>
+        <br />
         <Button color="primary" onClick={() => this.loginWithGoogle()}>
           Login With Google
         </Button>
-      </div>
+      </center>
     );
   }
 }

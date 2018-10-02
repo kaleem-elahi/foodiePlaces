@@ -29,6 +29,9 @@ export function loginThunk(callback) {
       .then((res) => {
         dispatch(login(res));
         callback();
+      })
+      .catch((err) => {
+        console.log(err, 'err');
       });
   };
 }
@@ -87,22 +90,9 @@ export function deleteRestaurantThunk(restaurant, user) {
   };
 }
 
-function toggleFavourite(restaurant) {
+export function toggleFavourite(restaurant) {
   return {
     type: TOGGLE_FAV,
     payload: restaurant,
-  };
-}
-
-export function toggleFavouriteThunk(restaurant, user) {
-  return (dispatch) => {
-    const restaurantV = restaurant;
-    restaurantV.isFavourite = !restaurant.isFavourite;
-    database
-      .ref(`${user.uid}/restaurants/${restaurantV.key}`)
-      .set(restaurantV)
-      .then(() => {
-        dispatch(toggleFavourite(restaurantV));
-      });
   };
 }

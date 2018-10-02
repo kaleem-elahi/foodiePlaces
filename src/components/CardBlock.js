@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Rating from 'react-rating';
 import {
-  Card, CardTitle, CardText, CardImg, CardImgOverlay,
+  Card, CardTitle, CardText, CardImgOverlay,
 } from 'reactstrap';
 import yellowStar from '../assets/img/star-yellow.png';
 import RedStar from '../assets/img/star-red.png';
@@ -11,7 +11,22 @@ import greyStar from '../assets/img/star-grey.png';
 const CardBlock = props => (
   <div>
     <Card inverse>
-      <CardImg width="100%" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=318%C3%97270&w=318&h=270&bg=333333&txtclr=666666" alt="Card image cap" />
+      <div
+        className="card-dp"
+        style={{
+          background: `url(${props.restaurant.image || 'https://placeholdit.imgix.net/~text?txtsize=33&txt=318%C3%97270&w=318&h=270&bg=333333&txtclr=666666'})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+        alt="Card image cap"
+      >
+
+        {props.restaurant.isFavourite ? (
+          props.fav
+        ) : (
+          props.unFav
+        )}
+      </div>
       <CardImgOverlay>
         <CardTitle>
           {props.restaurant.restaurantName}
@@ -39,6 +54,8 @@ const CardBlock = props => (
 CardBlock.propTypes = {
   // boolean to control the state of the popover
   restaurant: PropTypes.objectOf(PropTypes.any),
+  fav: PropTypes.element.isRequired,
+  unFav: PropTypes.element.isRequired,
 };
 CardBlock.defaultProps = {
   restaurant: {},

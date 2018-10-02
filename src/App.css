@@ -134,3 +134,107 @@ span.error {
   font-size: 14px;
   color: #c70000;
 }
+
+.flexBox{
+  display: flex;
+  justify-content: space-between
+}
+
+.dropzone {
+  /* float: right; */
+}
+.dropzone > div {
+  width: 140px!important;
+  height: 140px!important;
+}
+
+.deleteIcon {
+  background: #dc3545;
+  border: 0;
+  margin-top: 4px;
+}
+
+.deleteIcon > button {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  color: white;
+  font-size: 14px;
+}
+
+.image-drop-block {
+  width: 200px;
+  /* height: 200px; */
+  border-width: 2px;
+  border-color: rgb(102, 102, 102);
+  border-style: dashed;
+  border-radius: 5px;
+}
+
+.card-dp {
+  height: 112px;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  width: 142px;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+button.navbar-toggler {
+  color: rgb(255, 255, 255);
+  border-color: rgba(66, 66, 66, 0);
+  background: #cd4750;
+}
+
+ul.ml-auto.navbar-nav {
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: row-reverse;
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style: none;
+  justify-content: space-between;
+}
+
+.card-dp > span {
+  margin: 15px 10px;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.card-dp > .fa-heart-o:before {
+  background: white;
+  box-shadow: 1px 0px 9px 0px black;
+  border-radius: 50px;
+  padding: 8px;
+  font-size: 14px;
+  color: #ff5d5d;
+}
+
+.card-dp > .fa-heart:before {
+  background: white;
+  box-shadow: 1px 0px 9px 0px black;
+  border-radius: 50px;
+  padding: 8px;
+  font-size: 14px;
+  color: #ff5d5d;
+}
+
+.nav-tabs {
+  justify-content: flex-end;
+}
+
+
+.float-left-text {
+  float: left!important;
+  display: flex;
+  align-items: end;
+  text-align: left;
+  left: 20px;
+  top: 3px;
+  position: absolute;
+}
+
+.goToAllLine {
+  color: darkgray;
+} 

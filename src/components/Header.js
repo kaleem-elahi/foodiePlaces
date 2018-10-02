@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 // import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { toast } from 'react-toastify';
+
 import {
   Collapse,
   Navbar,
@@ -20,20 +22,42 @@ import { addRestaurant } from '../redux/actions/index';
 
 import AddRestaurantModal from './AddRestaurantModal';
 import logo from '../assets/img/icon.png';
-import { auth, database } from '../config/Firebase-config';
+import { auth, database, storage } from '../config/Firebase-config';
+
+const processImage = (file) => {
+  const promise = new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    const fileData = file;
+    fileData.end = fileData.size;
+    reader.readAsArrayBuffer(fileData);
+    reader.onloadend = (evt) => {
+      const imageBlob = new Blob([evt.target.result], { type: 'image/jpeg' });
+      resolve(imageBlob);
+    };
+  });
+  return promise;
+};
+const s4 = () => Math.floor((1 + Math.random()) * 0x10000)
+  .toString(16)
+  .substring(1);
+
+const guid = () => `${s4() + s4()}-${s4()}-${s4()}-${
+  s4()}-${s4()}${s4()}${s4()}`;
+
 
 class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
       modal: false,
+      loading: false,
       isOpen: false,
     };
 
     this.toggle = this.toggle.bind(this);
     this.toggleNavbar = this.toggleNavbar.bind(this);
     this.submitAddRestaurantForm = this.submitAddRestaurantForm.bind(this);
-    this.addRestaurantThunk = this.addRestaurantThunk.bind(this);
+    this.addRestaurantFireFunc = this.addRestaurantFireFunc.bind(this);
     this.logout = this.logout.bind(this);
   }
 
@@ -56,19 +80,37 @@ class Header extends Component {
   }
 
 
-  submitAddRestaurantForm(values) {
+  submitAddRestaurantForm(values, file) {
+    this.setState({ loading: true });
+
     const currentDate = new Date(); // for now
-    console.log({
-      ...values,
-      currentDate,
-    });
-    this.addRestaurantThunk(this.props.authUser, {
+    const data = {
       ...values,
       date: currentDate.toLocaleDateString(),
-    });
+    };
+
+    if (file) {
+      processImage(file).then((image) => {
+        const fileName = guid();
+        storage
+          .ref(`images/${fileName}`)
+          .put(image)
+          .then((snapshot) => {
+            data.image = snapshot.downloadURL;
+            this.addRestaurantFireFunc(this.props.authUser, data);
+            // database.ref(`${this.props.authUser.uid}/contacts`).push(contact);
+          })
+          .catch((err) => {
+            console.log(err, err.response);
+            toast.error(err.message);
+          });
+      });
+    } else {
+      this.addRestaurantFireFunc(this.props.authUser, data);
+    }
   }
 
-  addRestaurantThunk(user, restaurant) {
+  addRestaurantFireFunc(user, restaurant) {
     database
       .ref(`${user.uid}/restaurants`)
       .push(restaurant)
@@ -77,10 +119,14 @@ class Header extends Component {
         const restaurantV = snap.val();
         restaurantV.key = snap.key;
         this.props.addRestaurant(restaurantV);
-        this.setState({
-          modal: false,
-        });
         this.props.dispatch(reset('addRestaurantForm'));
+        toast.success('Restaurant added successfully !');
+        this.setState({ modal: false, loading: false });
+      })
+      .catch((err) => {
+        (err, err.response);
+        toast.error(err.message);
+        this.setState({ loading: false });
       });
   }
 
@@ -102,6 +148,7 @@ class Header extends Component {
                 dispatch={this.props.dispatch}
                 modal={this.state.modal}
                 toggle={this.toggle}
+                loading={this.state.loading}
                 submitAddRestaurantForm={this.submitAddRestaurantForm}
               />
             </NavItem>
