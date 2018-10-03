@@ -14,6 +14,7 @@ import Header from './components/Header';
 import CardBlock from './components/CardBlock';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
+import greyStar from './assets/img/star-grey.png';
 
 import {
   // auth,
@@ -28,14 +29,28 @@ class App extends Component {
     this.state = {
       loadingRestaurants: false,
       activeTab: '1',
+      restaurants: [],
+      isSortedByRating: true,
+      isSortByRestaurant: true,
     };
     this.tabToggle = this.tabToggle.bind(this);
     this.getFavourites = this.getFavourites.bind(this);
+    this.sortByRating = this.sortByRating.bind(this);
+    this.sortByRestaurant = this.sortByRestaurant.bind(this);
   }
 
   componentDidMount() {
     this.getRestaurantsFireFunc(this.props.authUser);
   }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.restaurants.length !== nextProps.restaurants.length) {
+      this.setState({
+        restaurants: nextProps.restaurants.reverse(),
+      });
+    }
+  }
+
 
   getRestaurantsFireFunc(user) {
     this.setState({
@@ -62,7 +77,7 @@ class App extends Component {
 
 
   getFavourites() {
-    const favouriteRestaurants = this.props.restaurants.filter(
+    const favouriteRestaurants = this.state.restaurants.filter(
       contact => contact.isFavourite,
     );
     return favouriteRestaurants;
@@ -87,8 +102,46 @@ class App extends Component {
     }
   }
 
+  sortByRating(restos, bool) {
+    // if (bool !== this.state.isSortedByRating) {
+    const restaurants = restos.map((resto) => {
+      if (!resto.rating) {
+        return {
+          ...resto,
+          rating: 0,
+        };
+      }
+      return resto;
+    });
+    this.setState({
+      restaurants: bool ? restaurants.sort((a, b) => a.rating - b.rating
+      || a.restaurantName.localeCompare(b.restaurantName))
+        : restaurants.sort((a, b) => b.rating - a.rating
+        || a.restaurantName.localeCompare(b.restaurantName)),
+    }, () => {
+      this.setState({
+        isSortedByRating: !bool,
+      });
+    });
+    // }
+  }
+
+  sortByRestaurant(restos, bool) {
+    // if (bool !== this.state.isSortedByRating) {
+    const restaurants = restos;
+    this.setState({
+      restaurants: bool ? restaurants.sort((a, b) => b.restaurantName - a.restaurantName || a.restaurantName.localeCompare(b.restaurantName))
+        : restaurants.sort((a, b) => a.restaurantName - b.restaurantName || b.restaurantName.localeCompare(a.restaurantName)),
+    }, () => {
+      this.setState({
+        isSortByRestaurant: !bool,
+      });
+    });
+    // }
+  }
+
   render() {
-    console.log(this.props.authUser);
+    console.log(this.props.restaurants, this.state.restaurants);
     return (
       <div className="App">
         <Header authUser={this.props.authUser} />
@@ -99,39 +152,87 @@ class App extends Component {
           <Container>
             <Row>
               <Col sm="12" md={{ size: 8, offset: 2 }}>
-                {this.props.restaurants.length === 0 && !this.state.loadingRestaurants
+                {this.state.restaurants.length === 0 && !this.state.loadingRestaurants
                 && (
                   'Hey, Just Click on that button to post new restaurants'
                 )}
-                {this.props.restaurants.length >= 0 && !this.state.loadingRestaurants
+                {this.state.restaurants.length >= 0 && !this.state.loadingRestaurants
                   ? (
                     <Fragment>
                       <Nav tabs>
-                        <div className="float-left-text">{this.state.activeTab === '1' ? 'All' : 'Favourites'}</div>
-                        <NavItem>
-                          <NavLink
-                            className={classnames({ active: this.state.activeTab === '1' })}
-                            onClick={() => { this.tabToggle('1'); }}
-                          >
-                            <FontAwesome name="heart-o" />
-                          </NavLink>
-                        </NavItem>
-                        <NavItem>
-                          <NavLink
-                            className={classnames({ active: this.state.activeTab === '2' })}
-                            onClick={() => { this.tabToggle('2'); }}
-                          >
-                            <FontAwesome name="heart" />
+                        <div className="display-flex">
+                          <div
+                            className="rating-sort"
+                            style={{
+                              backgroundSize: 'cover',
+                              backgroundPosition: 'center',
+                            }}
+                            alt="Card image cap"
+                            role="presentation"
+                            onKeyDown={() => {
 
-                          </NavLink>
-                        </NavItem>
+                            }}
+                            onClick={() => {
+                              this.sortByRating(this.state.restaurants, this.state.isSortedByRating);
+                            }}
+                          >
+                            {
+                          this.state.isSortedByRating
+                            ? <FontAwesome name="star-half-o" />
+                            : <FontAwesome name="star" />
+
+                        }
+                          </div>
+                          <div
+                            className="rating-sort"
+                            style={{
+                              backgroundSize: 'cover',
+                              backgroundPosition: 'center',
+                            }}
+                            alt="Card image cap"
+                            role="presentation"
+                            onKeyDown={() => {
+
+                            }}
+                            onClick={() => {
+                              this.sortByRestaurant(this.state.restaurants, this.state.isSortByRestaurant);
+                            }}
+                          >
+                            {
+                          this.state.isSortByRestaurant
+                            ? <FontAwesome name="sort-alpha-asc" />
+                            : <FontAwesome name="sort-alpha-desc" />
+
+                        }
+                          </div>
+                        </div>
+                        <div className="display-flex">
+                          <NavItem>
+                            <NavLink
+                              className={classnames({ active: this.state.activeTab === '1' })}
+                              onClick={() => { this.tabToggle('1'); }}
+                            >
+                              <FontAwesome name="heart-o" />
+                            </NavLink>
+                          </NavItem>
+                          <NavItem>
+                            <NavLink
+                              className={classnames({ active: this.state.activeTab === '2' })}
+                              onClick={() => { this.tabToggle('2'); }}
+                            >
+                              <FontAwesome name="heart" />
+
+                            </NavLink>
+                          </NavItem>
+                        </div>
                       </Nav>
                       <TabContent activeTab={this.state.activeTab}>
+                        <div className="float-left-text">{this.state.activeTab === '1' ? 'All' : 'Favourites'}</div>
+
                         <TabPane tabId="1">
                           <Row>
                             <Col sm="12">
-                              <br />
-                              {this.props.restaurants.map(restaurant => (
+                              {this.state.restaurants.map(restaurant => (
                                 <CardBlock
                                   fav={(
                                     <FontAwesome
@@ -150,18 +251,17 @@ class App extends Component {
                                   key={restaurant.key}
                                   restaurant={restaurant}
                                 />
-                              )).reverse()}
+                              ))}
                             </Col>
                           </Row>
                         </TabPane>
                         <TabPane tabId="2">
                           <Row>
                             <Col sm="12">
-                              <br />
-                              {this.props.restaurants.filter(
+                              {this.state.restaurants.filter(
                                 restaurant => restaurant.isFavourite === true,
                               ).length > 0
-                                ? (this.props.restaurants.filter(
+                                ? (this.state.restaurants.filter(
                                   restaurant => restaurant.isFavourite === true,
                                 ).map(restaurant => (
                                   <CardBlock

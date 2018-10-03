@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import { toast } from 'react-toastify';
 import {
   // auth,
   database,
@@ -31,7 +32,9 @@ export function loginThunk(callback) {
         callback();
       })
       .catch((err) => {
-        console.log(err, 'err');
+        console.log(err, err.response, 'err');
+        toast.error(err.message);
+        toast(err.message);
       });
   };
 }
