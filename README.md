@@ -1,8 +1,4 @@
 # FoodiePlaces
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fkaleem-elahi%2FfoodiePlaces.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fkaleem-elahi%2FfoodiePlaces?ref=badge_shield)
-
-
-#### Demo: https://foodieplaces-3311d.firebaseapp.com
 
 #### Getting Started:
 
@@ -16,6 +12,5 @@ step 4: `npm start`
 
 ####  DONE 👏
 
-
-## License
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fkaleem-elahi%2FfoodiePlaces.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fkaleem-elahi%2FfoodiePlaces?ref=badge_large)
+#### Demo: https://foodieplaces-3311d.firebaseapp.com
+[![Contact me on Codementor](https://cdn.codementor.io/badges/contact_me_github.svg)](https://www.codementor.io/shaikh9996?utm_source=github&utm_medium=button&utm_term=shaikh9996&utm_campaign=github)
